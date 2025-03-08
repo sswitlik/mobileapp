@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
+    "build": "nx build && npx cap copy",
     "test": "nx test"
   },
   "private": true,
@@ -16,6 +16,11 @@
     "@angular/platform-browser": "~19.2.0",
     "@angular/platform-browser-dynamic": "~19.2.0",
     "@angular/router": "~19.2.0",
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/core": "^7.0.1",
+    "@capacitor/geolocation": "^7.1.1",
+    "@maplibre/ngx-maplibre-gl": "^19.0.0",
+    "maplibre-gl": "^5.2.0",
     "rxjs": "~7.8.0",
     "zone.js": "~0.15.0"
   },
@@ -26,6 +31,7 @@
     "@angular/cli": "~19.2.0",
     "@angular/compiler-cli": "~19.2.0",
     "@angular/language-service": "~19.2.0",
+    "@capacitor/cli": "^7.0.1",
     "@eslint/js": "^9.8.0",
     "@nx/angular": "20.5.0",
     "@nx/devkit": "20.5.0",
