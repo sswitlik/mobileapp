@@ -4,6 +4,6 @@ import { testFeaturesRoutes } from './test-features/test-features.routes';
 export const appRoutes: Route[] = [
   {
     path: 'test',
-    children: testFeaturesRoutes
+    loadChildren: () => testFeaturesRoutes
   }
 ];
