@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'FMP Mobile',
   webDir: 'dist/mobileapp/browser',
   includePlugins: [
-    '@capacitor/geolocation'
+    '@capacitor/geolocation',
+    '@capacitor/browser'
   ]
 };
 

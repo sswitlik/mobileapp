@@ -4,6 +4,7 @@ import {
   signal,
   viewChild
 } from '@angular/core';
+import { Browser } from '@capacitor/browser';
 import {Geolocation, CallbackID} from '@capacitor/geolocation';
 import {
   ControlComponent,
@@ -16,6 +17,8 @@ import {
   LngLatLike
 } from 'maplibre-gl';
 
+type Postion = { lng: number, lat: number };
+
 @Component({
   selector: 'hms-test-geolocation',
   template: `
@@ -27,6 +30,9 @@ import {
       <button (click)="checkPermissions()">checkPermissions</button>
       <button (click)="requestPermissions()">requestPermissions</button>
     </p>
+    <p class="action-panel">
+      <button (click)="openGoogleMap(userPosition(), initPosition)">openGoogleMap (first getCurrentPosition)</button>
+    </p>
 
     <p class="warning">test map source! not available for production</p>
     <div style="height: 500px">
@@ -34,12 +40,12 @@ import {
         [style]="'map-style.json'"
         [zoom]="[16]"
         (zoomEnd)="log('zoomEnd',$event)"
-        [center]="{ lat: 52.231174, lng: 21.003914 }"
+        [center]="initPosition"
       >
         <mgl-control mglNavigation></mgl-control>
-        @if (center()) {
+        @if (userPosition()) {
           <mgl-marker
-            [lngLat]="center()"
+            [lngLat]="userPosition()"
           ></mgl-marker>
         }
       </mgl-map>
@@ -70,7 +76,9 @@ import {
 })
 export class TestGeolocationComponent {
 
-  center = signal<LngLatLike | undefined>(undefined);
+  userPosition = signal<Postion | undefined>(undefined);
+
+  readonly initPosition: Postion = { lat: 52.231174, lng: 21.003914 };
 
   map = viewChild(MapComponent);
 
@@ -84,13 +92,13 @@ export class TestGeolocationComponent {
     const result = await Geolocation.getCurrentPosition({timeout: 10000});
     console.log('getCurrentPosition result:', JSON.stringify(result));
     this.map()?.mapInstance.jumpTo({center: { lat: result.coords.latitude, lng: result.coords.longitude }})
-    this.center.set({ lat: result.coords.latitude, lng: result.coords.longitude });
+    this.userPosition.set({ lat: result.coords.latitude, lng: result.coords.longitude });
   }
 
   async watchPosition() {
     const result = await Geolocation.watchPosition({}, (position) => {
       if (position) {
-        this.center.set({ lat: position.coords.latitude, lng: position.coords.longitude });
+        this.userPosition.set({ lat: position.coords.latitude, lng: position.coords.longitude });
       }
 
     });
@@ -113,5 +121,13 @@ export class TestGeolocationComponent {
   async requestPermissions() {
     const result = await Geolocation.requestPermissions();
     console.log('requestPermissions result:', JSON.stringify(result));
+  }
+
+  openGoogleMap(origin: Postion | undefined, destination: Postion) {
+    if (!origin) {
+      return;
+    }
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}`;
+    Browser.open({ url }); // This opens in the default browser
   }
 }
