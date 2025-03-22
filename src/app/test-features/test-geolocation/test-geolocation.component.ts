@@ -52,11 +52,6 @@ type Postion = { lng: number, lat: number };
     </div>
   `,
   styles: `
-      .action-panel > * {
-          margin-left: 5px;
-          margin-top: 5px;
-      }
-
       .warning {
           color: red;
       }

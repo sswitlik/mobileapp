@@ -6,7 +6,9 @@ const config: CapacitorConfig = {
   webDir: 'dist/mobileapp/browser',
   includePlugins: [
     '@capacitor/geolocation',
-    '@capacitor/browser'
+    '@capacitor/browser',
+    '@capacitor/push-notifications',
+    '@capacitor/clipboard',
   ]
 };
 

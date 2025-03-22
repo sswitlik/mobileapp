@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notification Test</title>
+</head>
+<body>
+<button id="notifyBtn">Show Notification</button>
+<div id="consoleDiv"
+     style="border: 1px solid; width: 100vw; word-break: break-word"></div>
+
+<script type="module">
+
+  const logs = [];
+  const console2 = {
+    log: (...args) => {
+      console.log(...args);
+      logs.push(...args);
+      consoleDiv.innerHTML = logs.map(i => `<div>${i}</div>`).join('');
+    },
+    error: (...args) => {
+      console.error(...args);
+      logs.push(...args);
+      consoleDiv.innerHTML = logs.map(i => `<div>${i}</div>`).join('');
+    }
+  };
+  console2.log(window.location.search);
+  console2.log(9);
+
+  import { Workbox } from 'https://storage.googleapis.com/workbox-cdn/releases/6.2.0/workbox-window.dev.mjs';
+
+  let wb;
+  try {
+    wb = new Workbox('sw.js');
+    await wb.register();
+
+    console2.log(wb);
+    const swVersion = await wb.messageSW({ type: 'GET_VERSION' });
+    console2.log('Service Worker version:', swVersion);
+  } catch (e) {
+    console2.error(e);
+  }
+
+  document.getElementById('notifyBtn').addEventListener('click', async () => {
+    console2.log('click', Notification.permission);
+    try {
+      if (Notification.permission !== 'granted') {
+        await Notification.requestPermission();
+      }
+
+      console2.log('show');
+      const response = await wb.messageSW({ type: 'NOTIFY', body: 'dupa', title: 'Hello!' });
+      console2.log('response');
+      console2.log(response);
+    } catch (e) {
+      console2.log(e);
+    }
+  });
+</script>
+
+</body>
+</html>
