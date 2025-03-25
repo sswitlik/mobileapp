@@ -1,0 +1,16 @@
+{
+  "name": "appfire",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app/app.js",
+    "deploy": "docker build -t amdir/keyren . && docker push amdir/keyren"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "firebase-admin": "^13.2.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
