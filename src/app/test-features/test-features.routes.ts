@@ -9,5 +9,9 @@ export const testFeaturesRoutes: Route[] = [
     path: 'notification',
     loadComponent: () => import('./test-notifications/test-notifications.component').then(m => m.TestNotificationsComponent),
   },
+  {
+    path: '**',
+    redirectTo: 'geolocation'
+  }
 ];
 

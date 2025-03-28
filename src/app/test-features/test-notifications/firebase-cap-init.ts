@@ -1,8 +1,11 @@
 import { PushNotifications } from '@capacitor/push-notifications';
+import { Subject } from 'rxjs';
 
 export const NotificationConfig = {
   deviceToken: null as string | null,
+  events: new Subject<any>(),
 }
+
 
 export function initFirebaseAndroid() {
 
@@ -21,6 +24,7 @@ export function initFirebaseAndroid() {
 // Listen for push
   PushNotifications.addListener('pushNotificationReceived', notification => {
     console.log('Push received:', notification);
+    NotificationConfig.events.next(notification);
   });
 
 // When a user taps a notification
