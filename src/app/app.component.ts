@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
     <p class="action-panel">
       <button routerLink="test/geolocation">geolocation</button>
       <button routerLink="test/notification">notification</button>
+      <button routerLink="test/signature">signature</button>
     </p>
     <router-outlet></router-outlet>
   `,
