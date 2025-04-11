@@ -24,8 +24,13 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.UUID;
 
+import io.ionic.backgroundrunner.plugin.BackgroundRunner;
 import kotlinx.coroutines.*;
 import org.json.JSONObject;
 
@@ -38,6 +43,19 @@ public class MyMessagingService extends MessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Log.d(MyMessagingService.class.getName(), "DUPA");
         super.onMessageReceived(remoteMessage);
+
+        try {
+            URL url = new URL("https://bb53-80-94-27-69.ngrok-free.app/confirm");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+//            readStream(in);
+            } finally {
+                urlConnection.disconnect();
+            }
+        } catch (Exception e) {
+            Log.d(MyMessagingService.class.getName(), "ERROR");
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
                 .setSmallIcon(R.drawable.favicon)

@@ -9,6 +9,7 @@ const config: CapacitorConfig = {
     '@capacitor/browser',
     '@capacitor/push-notifications',
     '@capacitor/clipboard',
+    '@capacitor/background-runner',
   ]
 };
 

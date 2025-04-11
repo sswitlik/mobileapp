@@ -6,9 +6,7 @@ const { response } = require('express');
 const app = express()
 const port = 3000
 
-setInterval((  ) => {
-    console.log('log check');
-}, 10000);
+console.log('version 1.0');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -126,6 +124,11 @@ app.get('/send', async (req, res) => {
         console.log(response);
     })
         .catch(console.error);
+    res.send('Hello World!')
+})
+
+app.get('/confirm', async (req, res) => {
+    console.log("confirmation!");
     res.send('Hello World!')
 })
 
