@@ -8,8 +8,6 @@ public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyMessagingService.capacitorBridge = this.getBridge();
-        MyMessagingService.createNotificationChannel(this);
-
+        MyMessagingService.capacitorBridge = getBridge();
     }
 }

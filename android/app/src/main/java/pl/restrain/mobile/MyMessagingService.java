@@ -1,21 +1,12 @@
 package pl.restrain.mobile;
 
-
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.capacitorjs.plugins.pushnotifications.MessagingService;
 import com.getcapacitor.Bridge;
-import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.MessageHandler;
 import com.getcapacitor.PluginCall;
@@ -24,13 +15,12 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.UUID;
 
 import io.ionic.backgroundrunner.plugin.BackgroundRunner;
+import io.ionic.backgroundrunner.plugin.BackgroundRunnerPlugin;
+import io.ionic.backgroundrunner.plugin.RunnerConfig;
+
 import kotlinx.coroutines.*;
 import org.json.JSONObject;
 
@@ -44,51 +34,34 @@ public class MyMessagingService extends MessagingService {
         Log.d(MyMessagingService.class.getName(), "DUPA");
         super.onMessageReceived(remoteMessage);
 
-        try {
-            URL url = new URL("https://bb53-80-94-27-69.ngrok-free.app/confirm");
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-//            readStream(in);
-            } finally {
-                urlConnection.disconnect();
-            }
-        } catch (Exception e) {
-            Log.d(MyMessagingService.class.getName(), "ERROR");
-        }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
-                .setSmallIcon(R.drawable.favicon)
-                .setContentTitle(remoteMessage.getData().get("title"))
-                .setContentText(remoteMessage.getData().get("body"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        JSObject data = new JSObject();
+        data.put("label", "pl.restrain.mobile.task");
+        data.put("event", "notificationReceived");
+        data.put("details", remoteMessage);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(MyMessagingService.class.getName(), "notify");
-            notificationManager.notify(1, builder.build());
-        }
+        RunnerConfig c = RunnerConfig.Companion.fromJSON(data);
+        BackgroundRunner br = new BackgroundRunner(capacitorBridge.getContext());
+
+//        try {
+//
+//        BackgroundRunnerPlugin plugin = (BackgroundRunnerPlugin) capacitorBridge.getPlugin("BackgroundRunner").getInstance();
+//
+//        JSObject data = new JSObject();
+//        data.put("label", "pl.restrain.mobile.task");
+//        data.put("event", "notificationReceived");
+//        data.put("details", remoteMessage);
+//
+//        PluginCall call = new PluginCall(null, "BackgroundRunner",  UUID.randomUUID().toString(), "dispatchEvent", data);
+//        plugin.dispatchEvent(call);
+//        } catch (Exception e) {
+//            Log.d(MyMessagingService.class.getName(), "ERROR");
+//        }
     }
 
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-    }
-
-    public static void createNotificationChannel(BridgeActivity mainActivity) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is not in the Support Library.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "my_channel_id";
-            String description = "R.string.channel_description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("my_channel_id", name, NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this.
-            NotificationManager notificationManager = mainActivity.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
 

@@ -5,9 +5,5 @@ export const appRoutes: Route[] = [
   {
     path: 'test',
     loadChildren: () => testFeaturesRoutes
-  },
-  {
-    path: '**',
-    redirectTo: 'test'
   }
 ];
