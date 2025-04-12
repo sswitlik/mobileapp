@@ -6,9 +6,7 @@ const { response } = require('express');
 const app = express()
 const port = 3000
 
-setInterval((  ) => {
-    console.log('log check');
-}, 10000);
+console.log('version 1.0');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -74,13 +72,15 @@ app.get('/', async (req, res) => {
             const titleEl = document.querySelector('#title') 
             const messageEl = document.querySelector('#message') 
             
-            const device = new URLSearchParams(window.location.search).get('device');
+            const search = new URLSearchParams(window.location.search);
+            const device = search.get('device');
             deviceEl.value = device;
             titleEl.value = 'Hello!';
             messageEl.value = 'This is a test notification from Firebase Admin SDK.';
             
             send.addEventListener('click', (  ) => {
-            fetch('/send?deviceId='+deviceEl.value+'&title='+titleEl.value+'&body='+messageEl.value, { cache: "no-store" })
+            const typeQuery = search.get('type') && '&type='+search.get('type');
+            fetch('/send?deviceId='+deviceEl.value+'&title='+titleEl.value+'&body='+messageEl.value+typeQuery, { cache: "no-store" })
               .then( r  => {
                   console.log(r);
               })
@@ -124,6 +124,11 @@ app.get('/send', async (req, res) => {
         console.log(response);
     })
         .catch(console.error);
+    res.send('Hello World!')
+})
+
+app.get('/confirm', async (req, res) => {
+    console.log("confirmation!");
     res.send('Hello World!')
 })
 
